@@ -50,6 +50,13 @@ namespace StageDefTool
     {
         public static void Main(string[] args)
         {
+            if (args.Length != 1)
+            {
+                Console.WriteLine("Invalid number of arguments!");
+                Console.WriteLine("Syntax: DXStageDefConverter.exe [input filename].lz.raw");
+                return;
+            }
+
             var standardOutput = new StreamWriter(Console.OpenStandardOutput())
             {
                 AutoFlush = true
@@ -683,8 +690,8 @@ namespace StageDefTool
                             {
                                 Console.WriteLine("Converting animation header 2 (" + "at 0x" +
                                                   string.Format("{0:X8}", reader.BaseStream.Position) + ")...");
-                                endianConvert(byteBuffer, 4, 2);
-                                convertAnimationHeader(0x40, 0);
+                                endianConvert(byteBuffer, 4, 2);    // converts unknown/null 1, and animation loop point
+                                convertAnimationHeader(0x50, 0);    // converts the rest of the list
                             }
 
                             // converts effect header
@@ -953,25 +960,25 @@ namespace StageDefTool
                             switch ((offset - initialOffset) / 8)
                             {
                                 case 0:
-                                    Console.WriteLine("Type: X rotation");
+                                    Console.WriteLine("\t\tType: X rotation");
                                     break;
                                 case 1:
-                                    Console.WriteLine("Type: Y rotation");
+                                    Console.WriteLine("\t\tType: Y rotation");
                                     break;
                                 case 2:
-                                    Console.WriteLine("Type: Z rotation");
+                                    Console.WriteLine("\t\tType: Z rotation");
                                     break;
                                 case 3:
-                                    Console.WriteLine("Type: X translation");
+                                    Console.WriteLine("\t\tType: X translation");
                                     break;
                                 case 4:
-                                    Console.WriteLine("Type: Y translation");
+                                    Console.WriteLine("\t\tType: Y translation");
                                     break;
                                 case 5:
-                                    Console.WriteLine("Type: Z translation");
+                                    Console.WriteLine("\t\tType: Z translation");
                                     break;
                                 default:
-                                    Console.WriteLine("Type: undefined (not a standard animation keyframe, likely BG)");
+                                    Console.WriteLine("\t\tType: undefined (not a standard animation keyframe, likely BG)");
                                     break;
                             }
 
